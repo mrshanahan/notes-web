@@ -1,0 +1,51 @@
+.main {
+    display: flex;
+    flex-direction: row;
+}
+
+#notes-list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: aqua;
+    max-width: 50em;
+}
+
+.buffer {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 2;
+    width: 100%;
+}
+
+.note {
+    display: flex;
+    flex-direction: row;
+    padding: 0.5em 0.5em 0.5em 0.5em;
+    margin: 0.2em; /* NB: This makes 0.4em of margin between notes, but 0.2em at the top & bottom of the list. I am fine with this. */
+    background-color: blueviolet;
+}
+
+.editor-console {
+    width: 100%;
+}
+
+.editor-container {
+    width: 100%;
+    background-color: aqua;
+    min-height: 50em;
+    border: 0.3em solid grey;
+}
+
+#editor {
+    margin: 0.5em;
+    width: 100%;
+    height: 100%;
+    font-family: monospace;
+}
+
+#login-container {
+    width: 100%;
+    background-color: aqua;
+    text-align: center;
+}

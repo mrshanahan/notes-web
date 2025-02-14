@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>Edit</title>
+        <script src="./notes.js"></script>
+        <script src="./edit.js"></script>
+        <script>
+            window.onload = loadNoteContent;
+        </script>
+        <link href="./notes.css" rel="stylesheet" type="text/css" media="all" />
+    </head>
+    <body>
+        <div class="main">
+            <div class="buffer"></div>
+            <div class="editor-console">
+                <div id="note-title"></div>
+                <a href="/">← Back</a>
+                <div class="editor-container">
+                    <div id="editor" contenteditable="true"></div>
+                </div>
+            </div>
+            <div class="buffer"></div>
+        </div>
+    </body>
+</html>
