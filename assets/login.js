@@ -11,3 +11,5 @@ function setLoginBanner() {
         container.insertBefore(bannerNode, loginLink);
     }
 }
+
+window.onload = setLoginBanner;

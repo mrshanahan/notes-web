@@ -19,3 +19,5 @@ function loadNotes() {
         }
     })
 }
+
+window.onload = loadNotes;

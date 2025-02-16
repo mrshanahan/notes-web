@@ -39,3 +39,5 @@ function loadNoteContent() {
         editor.innerHTML = lines.join('<br/>');
     })
 }
+
+window.onload = loadNoteContent;
