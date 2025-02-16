@@ -50,6 +50,22 @@ function getNoteContent(id, token, callback) {
     genericSend('GET', API_URL + '/' + id + '/content', token, callback);
 }
 
+function updateNote(id, note, token, callback) {
+    const jsonNote = JSON.stringify(note);
+    genericSendWithPayload('POST', API_URL + '/' + id, jsonNote, token, callback, 'application/json', JSON.parse);
+}
+
+function updateNoteContent(id, content, token, callback) {
+    const formData = new FormData();
+    formData.append('content', content);
+    genericSendWithPayload('POST', API_URL + '/' + id + '/content', formData, token, callback);
+}
+
+function createNote(note, token, callback) {
+    const jsonNote = JSON.stringify(note);
+    genericSendWithPayload('POST', API_URL + '/', jsonNote, token, callback, 'application/json', JSON.parse);
+}
+
 function genericSend(method, url, token, callback, responseTransform) {
     const xhr = new XMLHttpRequest();
     xhr.open(method, url);
@@ -70,4 +86,29 @@ function genericSend(method, url, token, callback, responseTransform) {
         console.error('Network error');
     };
     xhr.send();
+}
+
+function genericSendWithPayload(method, url, payload, token, callback, contentType = null, responseTransform) {
+    const xhr = new XMLHttpRequest();
+    xhr.open(method, url);
+    xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+    if (contentType) {
+        xhr.setRequestHeader('Content-Type', contentType);
+    }
+    xhr.onload = function() {
+        if (xhr.status >= 200 && xhr.status < 300) {
+            var response = xhr.response;
+            if (responseTransform) {
+                response = responseTransform(response);
+            }
+            console.log('Data received:', response);
+            callback(response);
+        } else {
+            console.error('Request failed with status:', xhr.status);
+        }
+    };
+    xhr.onerror = function() {
+        console.error('Network error');
+    };
+    xhr.send(payload);
 }

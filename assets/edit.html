@@ -13,7 +13,16 @@
         <div class="main">
             <div class="buffer"></div>
             <div class="editor-console">
-                <div id="note-title"></div>
+                <div id="note-title-bar">
+                    <div>
+                        <input
+                            id="note-title"
+                            placeholder="Title..."
+                            oninput="checkTitleChange();"/>
+                    </div>
+                    <!-- TODO: Disabled by default, enable when edited -->
+                    <div id="save-title"><button onclick="saveNote();">Save</button></div>
+                </div>
                 <a href="/">← Back</a>
                 <div class="editor-container">
                     <div id="editor" contenteditable="true"></div>

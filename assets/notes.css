@@ -3,12 +3,25 @@
     flex-direction: row;
 }
 
+#notes-list-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: aqua;
+    max-width: 50em;
+}
+
 #notes-list {
     display: flex;
     flex-direction: column;
     width: 100%;
     background-color: aqua;
     max-width: 50em;
+}
+
+#create-note-bar {
+    display: flex;
+    flex-direction: row;
 }
 
 .buffer {
@@ -25,6 +38,32 @@
     margin: 0.2em; /* NB: This makes 0.4em of margin between notes, but 0.2em at the top & bottom of the list. I am fine with this. */
     background-color: blueviolet;
 }
+
+#note-title-bar {
+    display: flex;
+    flex-direction: row;
+}
+
+#note-title {
+    border: 0.1px solid #ccc;
+    border-radius: 0.5em;
+    padding: 0.3em;
+    font-size: x-large;
+}
+
+#save-title {
+    padding: 0.3em;
+    font-size: large;
+    padding-top: 0.6em;
+}
+
+#note-title.note-title-edited {
+    background-color: yellow;
+}
+
+/* #note-title:hover {
+    background-color: aqua;
+} */
 
 .editor-console {
     width: 100%;
