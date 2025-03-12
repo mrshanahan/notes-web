@@ -27,7 +27,7 @@ func main() {
 }
 
 func Run() int {
-	staticFilesDir := os.Getenv("STATIC_FILES_DIR")
+	staticFilesDir := os.Getenv("NOTES_WEB_STATIC_FILES_DIR")
 	if staticFilesDir == "" {
 		staticFilesDir = DefaultStaticFilesDir
 	}

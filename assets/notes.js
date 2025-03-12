@@ -36,10 +36,25 @@ function validateAuthToken() {
     return token
 }
 
+function genericTextToHtmlText(text) {
+    var lines = text.split('\n');
+    for (var i = 0; i < lines.length; i++) {
+        var line = lines[i];
+        while (line.match(/^\s+/)) {
+            line = line.replace(/^(\s*)\s/, '$1&nbsp;');
+        }
+        while (line.match(/\s\s+/)) {
+            line = line.replace(/(\s+)\s/, '$1&nbsp;');
+        }
+        lines[i] = line;
+    }
+    return lines.join('<br/>');
+}
+
 // API service interactions
 
 function getNotes(token, callback) {
-    genericSend('GET', API_URL, token, callback, JSON.parse);
+    genericSend('GET', API_URL + '?includePreview=true', token, callback, JSON.parse);
 }
 
 function getNote(id, token, callback) {

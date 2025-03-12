@@ -33,10 +33,31 @@
 
 .note {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     padding: 0.5em 0.5em 0.5em 0.5em;
     margin: 0.2em; /* NB: This makes 0.4em of margin between notes, but 0.2em at the top & bottom of the list. I am fine with this. */
-    background-color: blueviolet;
+    /*background-color: blueviolet;*/
+    background-color: darkgray;
+    font-family: monospace;
+    border-radius: 0.5em;
+    color: black;
+    cursor: pointer;
+}
+
+.note:link { text-decoration: none; }
+.note:visited { text-decoration: none; }
+.note:hover { text-decoration: none; }
+.note:active { text-decoration: none; }
+.note:hover { background-color: lightgray; }
+.note:focus { background-color: lightgray; }
+
+.note-title {
+    font-weight: bold;
+}
+
+.note-preview {
+    margin-top: 1em;
+    font-size: x-small;
 }
 
 #note-title-bar {
