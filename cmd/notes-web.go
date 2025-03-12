@@ -12,7 +12,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
-	webauth "github.com/mrshanahan/notes-web/internal/auth"
 	"github.com/mrshanahan/notes-web/internal/controllers"
 )
 
@@ -58,7 +57,7 @@ func Run() int {
 	}
 
 	// TODO: Extract this
-	webauth.InitializeAuth("http://localhost:4444")
+	// webauth.InitializeAuth("http://localhost:4444")
 
 	app := fiber.New()
 	app.Use(requestid.New(), logger.New(), recover.New())
