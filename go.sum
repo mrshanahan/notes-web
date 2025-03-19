@@ -39,6 +39,10 @@ github.com/mrshanahan/notes-api v0.0.0-20250123063443-ca167774d9f0 h1:xwsXi+ijwp
 github.com/mrshanahan/notes-api v0.0.0-20250123063443-ca167774d9f0/go.mod h1:U0TjXNZuoIGn21N6S+OK8WnPp04aMzf+fPXZ6bE5LcU=
 github.com/mrshanahan/notes-api v0.0.0-20250123064022-3e2b4c2cedd6 h1:cIHBvsUyLsVugZ7bM3HF4ithdtKGqteuddCfTcjL5MY=
 github.com/mrshanahan/notes-api v0.0.0-20250123064022-3e2b4c2cedd6/go.mod h1:U0TjXNZuoIGn21N6S+OK8WnPp04aMzf+fPXZ6bE5LcU=
+github.com/mrshanahan/notes-api v0.0.0-20250316025833-c4626fdbeb13 h1:DVEgTFd1lLae7F8BqPL0TWU+YDOdNcsZPkBMAkiTcxY=
+github.com/mrshanahan/notes-api v0.0.0-20250316025833-c4626fdbeb13/go.mod h1:U0TjXNZuoIGn21N6S+OK8WnPp04aMzf+fPXZ6bE5LcU=
+github.com/mrshanahan/notes-api v0.0.0-20250316030531-f6d61f6632ea h1:dxuY1SyoJ8LFlmE9ADjHhK6Gfr54y84lyp9Cow1UgQk=
+github.com/mrshanahan/notes-api v0.0.0-20250316030531-f6d61f6632ea/go.mod h1:U0TjXNZuoIGn21N6S+OK8WnPp04aMzf+fPXZ6bE5LcU=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=

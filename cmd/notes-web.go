@@ -1,17 +1,20 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log/slog"
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
+	webauth "github.com/mrshanahan/notes-web/internal/auth"
 	"github.com/mrshanahan/notes-web/internal/controllers"
 )
 
@@ -57,7 +60,22 @@ func Run() int {
 	}
 
 	// TODO: Extract this
-	// webauth.InitializeAuth("http://localhost:4444")
+	disableAuth := false
+	disableAuthOption := strings.TrimSpace(os.Getenv("NOTES_WEB_DISABLE_AUTH"))
+	if disableAuthOption != "" {
+		slog.Warn("disabling authentication framework - THIS SHOULD ONLY BE RUN FOR TESTING!")
+		disableAuth = true
+	}
+
+	if !disableAuth {
+		authProviderUrl := os.Getenv("NOTES_WEB_AUTH_PROVIDER_URL")
+		if authProviderUrl == "" {
+			panic("Required value for NOTES_WEB_AUTH_PROVIDER_URL but none provided")
+		}
+		webauth.InitializeAuth(context.Background(), authProviderUrl)
+	} else {
+		slog.Warn("skipping initialization of authentication framework", "disableAuth", disableAuth)
+	}
 
 	app := fiber.New()
 	app.Use(requestid.New(), logger.New(), recover.New())

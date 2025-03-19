@@ -23,5 +23,6 @@ services:
     environment:
       NOTES_WEB_PORT: 80
       NOTES_WEB_STATIC_FILES_DIR: /app/assets-shared
+      # NOTES_WEB_AUTH_PROVIDER_URL: http://localhost:8080/realms/notes
     volumes:
       - ./assets:/app/assets-shared

@@ -17,7 +17,7 @@ var (
 )
 
 func VerifyToken(ctx context.Context, tokenString string) (*jwt.Token, error) {
-	jwksUri, err := getJwksUri(AuthConfig.KeycloakBaseUri)
+	jwksUri, err := getJwksUri(AuthConfig.BaseUri)
 	if err != nil {
 		panic("ahhhh")
 	}
@@ -30,7 +30,7 @@ func VerifyToken(ctx context.Context, tokenString string) (*jwt.Token, error) {
 
 	token, err := jwt.ParseString(tokenString,
 		jwt.WithKeySet(jwks),
-		jwt.WithIssuer(AuthConfig.KeycloakBaseUri),
+		jwt.WithIssuer(AuthConfig.BaseUri),
 		//jwt.WithAudience("..."))
 	)
 	if err != nil {

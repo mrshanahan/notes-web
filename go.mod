@@ -1,6 +1,8 @@
 module github.com/mrshanahan/notes-web
 
-go 1.21.1
+go 1.23.7
+
+require github.com/lestrrat-go/jwx v1.2.30
 
 require (
 	github.com/andybalholm/brotli v1.1.0 // indirect
@@ -15,12 +17,11 @@ require (
 	github.com/lestrrat-go/blackmagic v1.0.2 // indirect
 	github.com/lestrrat-go/httpcc v1.0.1 // indirect
 	github.com/lestrrat-go/iter v1.0.2 // indirect
-	github.com/lestrrat-go/jwx v1.2.30 // indirect
 	github.com/lestrrat-go/option v1.0.1 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.16 // indirect
-	github.com/mrshanahan/notes-api v0.0.0-20250123064022-3e2b4c2cedd6 // indirect
+	github.com/mrshanahan/notes-api v0.0.0-20250316030531-f6d61f6632ea // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect

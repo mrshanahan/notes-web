@@ -14,7 +14,7 @@ var (
 )
 
 func LoginController(c *fiber.Ctx) error {
-	url := webauth.AuthConfig.KeycloakLoginConfig.AuthCodeURL("randomstate")
+	url := webauth.AuthConfig.LoginConfig.AuthCodeURL("randomstate")
 
 	originUrl := c.Query(OriginUrlCookieName)
 	if originUrl == "" {
@@ -45,7 +45,7 @@ func CallbackController(c *fiber.Ctx) error {
 	code := c.Query("code")
 	fmt.Println("Code: " + code)
 
-	kcConfig := webauth.AuthConfig.KeycloakLoginConfig
+	kcConfig := webauth.AuthConfig.LoginConfig
 
 	tokenResponse, err := kcConfig.Exchange(c.Context(), code)
 	if err != nil {
