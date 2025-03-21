@@ -36,7 +36,7 @@ var (
 
 // }
 
-func InitializeAuth(ctx context.Context, baseProviderUrl string) {
+func InitializeAuth(ctx context.Context, baseProviderUrl string, redirectUrl string) {
 	// AuthConfig = buildAuthConfig(context.Background(), urlRoot)
-	AuthConfig = auth.BuildAuthConfig(ctx, "notes-web", baseProviderUrl)
+	AuthConfig = auth.BuildAuthConfig(ctx, "notes-web", baseProviderUrl, redirectUrl)
 }

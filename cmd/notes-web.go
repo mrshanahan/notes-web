@@ -72,7 +72,11 @@ func Run() int {
 		if authProviderUrl == "" {
 			panic("Required value for NOTES_WEB_AUTH_PROVIDER_URL but none provided")
 		}
-		webauth.InitializeAuth(context.Background(), authProviderUrl)
+		redirectUrl := os.Getenv("NOTES_WEB_REDIRECT_URL")
+		if redirectUrl == "" {
+			panic("Required value for NOTES_WEB_REDIRECT_URL but none provided")
+		}
+		webauth.InitializeAuth(context.Background(), authProviderUrl, redirectUrl)
 	} else {
 		slog.Warn("skipping initialization of authentication framework", "disableAuth", disableAuth)
 	}
