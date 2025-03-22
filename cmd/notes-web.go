@@ -16,6 +16,8 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	webauth "github.com/mrshanahan/notes-web/internal/auth"
 	"github.com/mrshanahan/notes-web/internal/controllers"
+
+	"github.com/gofiber/template/html/v2"
 )
 
 var (
@@ -45,6 +47,11 @@ func Run() int {
 		}
 
 		return 1
+	}
+
+	notesApiUrl := os.Getenv("NOTES_WEB_API_URL")
+	if notesApiUrl == "" {
+		panic("Required value for NOTES_WEB_API_URL but none provided")
 	}
 
 	portStr := os.Getenv("NOTES_WEB_PORT")
@@ -81,7 +88,10 @@ func Run() int {
 		slog.Warn("skipping initialization of authentication framework", "disableAuth", disableAuth)
 	}
 
-	app := fiber.New()
+	jsEngine := html.New(staticFilesDir, ".js")
+	app := fiber.New(fiber.Config{
+		Views: jsEngine,
+	})
 	app.Use(requestid.New(), logger.New(), recover.New())
 	app.Route("/", func(notes fiber.Router) {
 		// TODO: Do we actually need this if we're only serving static files?
@@ -90,6 +100,11 @@ func Run() int {
 			authR.Get("/login", controllers.LoginController)
 			authR.Get("/logout", controllers.LogoutController)
 			authR.Get("/callback", controllers.CallbackController)
+		})
+		notes.Get("/*.js", func(c *fiber.Ctx) error {
+			return c.Render(c.Params("*"), fiber.Map{
+				"ApiUrl": notesApiUrl,
+			})
 		})
 		notes.Use(filesystem.New(filesystem.Config{
 			// This should encompass: /, /login, /edit

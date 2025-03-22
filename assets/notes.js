@@ -1,4 +1,4 @@
-var API_URL = "http://localhost:2222/notes";
+var API_URL = "{{ .ApiUrl }}";
 
 function getCookie(name) {
     const cookies = document.cookie.split(';');
