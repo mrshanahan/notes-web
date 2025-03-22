@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"log/slog"
@@ -8,6 +9,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
@@ -15,9 +17,9 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	webauth "github.com/mrshanahan/notes-web/internal/auth"
+	"github.com/mrshanahan/notes-web/internal/cache"
 	"github.com/mrshanahan/notes-web/internal/controllers"
-
-	"github.com/gofiber/template/html/v2"
+	"github.com/mrshanahan/notes-web/internal/render"
 )
 
 var (
@@ -88,10 +90,21 @@ func Run() int {
 		slog.Warn("skipping initialization of authentication framework", "disableAuth", disableAuth)
 	}
 
-	jsEngine := html.New(staticFilesDir, ".js")
-	app := fiber.New(fiber.Config{
-		Views: jsEngine,
+	jsCache := cache.NewFileCache(cache.FileCacheConfig{
+		RootDir: staticFilesDir,
+		// TODO: Make these configurable from env vars; currently, cache is effectively off
+		MetadataCheckInterval: time.Minute * 0,
+		ValidityInterval:      time.Minute * 0,
 	})
+
+	renderer, err := render.NewRenderer(map[string]string{
+		"ApiUrl": notesApiUrl,
+	})
+	if err != nil {
+		panic(fmt.Sprintf("error: failed to create renderer: %s", err))
+	}
+
+	app := fiber.New()
 	app.Use(requestid.New(), logger.New(), recover.New())
 	app.Route("/", func(notes fiber.Router) {
 		// TODO: Do we actually need this if we're only serving static files?
@@ -102,15 +115,23 @@ func Run() int {
 			authR.Get("/callback", controllers.CallbackController)
 		})
 		notes.Get("/*.js", func(c *fiber.Ctx) error {
-			return c.Render(c.Params("*"), fiber.Map{
-				"ApiUrl": notesApiUrl,
-			})
+			filename := c.Params("*")
+			content, err := jsCache.Get(filename + ".js")
+			if err != nil {
+				slog.Error("failed to get file from cache", "filename", filename+".js", "error", err)
+				return c.SendStatus(fiber.StatusInternalServerError)
+			}
+			finalContent := renderer.Render(content)
+
+			c.Type(".js")
+			return c.SendStream(bytes.NewBuffer(finalContent))
 		})
 		notes.Use(filesystem.New(filesystem.Config{
 			// This should encompass: /, /login, /edit
 			Root:   http.Dir(staticFilesDir),
 			Browse: false,
 			Index:  "index.html",
+
 			// TODO: 404 page?
 		}))
 	})
