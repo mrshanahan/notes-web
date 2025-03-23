@@ -1,4 +1,4 @@
 TODOs:
-- Extract common login & auth methods
+v Extract common login & auth methods
 - Actual text editor
-- Save changes
+v Save changes

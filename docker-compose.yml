@@ -25,6 +25,7 @@ services:
       NOTES_API_PORT: 80
       NOTES_API_AUTH_PROVIDER_URL: http://notes-auth.local:8080/realms/notes
       NOTES_API_REDIRECT_URL: http://localhost:${API_PORT:-2222}/notes/auth/callback
+      NOTES_API_ALLOWED_ORIGINS: http://localhost:${WEB_PORT:-4444}
       NOTES_API_DISABLE_AUTH: ${DISABLE_AUTH}
   web:
     depends_on:
