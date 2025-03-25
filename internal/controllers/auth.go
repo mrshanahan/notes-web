@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	webauth "github.com/mrshanahan/notes-web/internal/auth"
@@ -31,8 +32,8 @@ func LoginController(c *fiber.Ctx) error {
 }
 
 func LogoutController(c *fiber.Ctx) error {
-	c.ClearCookie(webauth.TokenCookieName)
-	c.ClearCookie(OriginUrlCookieName)
+	deleteCookie(c, webauth.TokenCookieName)
+	deleteCookie(c, OriginUrlCookieName)
 	return c.SendString("Logout successful")
 }
 
@@ -66,7 +67,20 @@ func CallbackController(c *fiber.Ctx) error {
 	if redirectUrl != "" {
 		redirectUrl = "/"
 	}
-	c.ClearCookie(OriginUrlCookieName)
+	deleteCookie(c, OriginUrlCookieName)
 
 	return c.Redirect(redirectUrl)
+}
+
+// Ctx.ClearCookie was often not doing the job here; the recommendation
+// is to explicitly set the expiration time on the cookie to a time in the past.
+// See:
+// - https://docs.gofiber.io/api/ctx/#clearcookie (see warning)
+// - https://github.com/gofiber/fiber/issues/1127 (solution was to do exactly this)
+func deleteCookie(c *fiber.Ctx, name string) {
+	c.Cookie(&fiber.Cookie{
+		Name:    name,
+		Value:   "deleted",
+		Expires: time.Now().Add(-(time.Hour * 2)),
+	})
 }
