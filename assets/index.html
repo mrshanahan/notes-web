@@ -14,9 +14,10 @@
             <div class="buffer"></div>
             <div id="notes-list-container">
                 <div id="create-note-bar">
-                    <a href="/edit.html">
-                        <img src="./create-note.png"/>
-                    </a>
+                    <a href="/edit.html"><img src="./create-note.png"/></a>
+                    <div id="notes-list-filter-container">
+                        <input id="notes-list-filter" placeholder="Filter by title..." oninput="renderNotes();" />
+                    </div>
                 </div>
                 <div id="notes-list"></div>
             </div>

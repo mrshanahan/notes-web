@@ -3,6 +3,18 @@
     flex-direction: row;
 }
 
+#notes-list-filter-container {
+    display: flex;
+    justify-content: center;
+    justify-items: center;
+    width: 100%;
+    padding: 0.5em;
+}
+
+#notes-list-filter {
+    width: 100%;
+}
+
 #notes-list-container {
     display: flex;
     flex-direction: column;
