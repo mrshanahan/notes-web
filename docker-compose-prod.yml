@@ -11,7 +11,7 @@ services:
     environment:
       NOTES_WEB_PORT: 80
       NOTES_WEB_STATIC_FILES_DIR: /app/assets-shared
-      NOTES_WEB_API_URL: https://notes.quemot.dev/notes
+      NOTES_WEB_API_URL: https://api.notes.quemot.dev/notes
       NOTES_WEB_AUTH_PROVIDER_URL: https://auth.notes.quemot.dev/realms/notes
       NOTES_WEB_REDIRECT_URL: http://localhost:${WEB_PORT:-4444}/auth/callback
       NOTES_WEB_DISABLE_AUTH: ${DISABLE_AUTH}

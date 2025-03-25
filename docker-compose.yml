@@ -28,6 +28,7 @@ services:
       NOTES_API_ALLOWED_ORIGINS: http://localhost:${WEB_PORT:-4444}
       NOTES_API_DISABLE_AUTH: ${DISABLE_AUTH}
   web:
+    image: notes-api/web
     depends_on:
       - auth
     build:
