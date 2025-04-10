@@ -59,20 +59,23 @@ function saveNote() {
         if (originalNote.title !== newTitle) {
             updateNote(originalNote.id, { title: newTitle }, token, (response) => {
                 console.log('Updated note with id ' + response.id + ': "' + originalNote.title + '" -> "' + newTitle + '"');
-                window.location.href = '/edit.html?id=' + originalNote.id;
+                updateContentAndReload(response.id);
             });
         }
-        const editorNode = document.getElementById('editor');
-        updateNoteContent(originalNote.id, editorNode.innerText, token, () => {
-            console.log('Updated note contents with id ' + originalNote.id);
-            window.location.href = '/edit.html?id=' + originalNote.id;
-        });
     } else {
         createNote({ title: titleNode.value }, token, (response) => {
             console.log('Note created with id ' + response.id);
-            window.location.href = '/edit.html?id=' + response.id;
+            updateContentAndReload(response.id);
         });
     }
+}
+
+function updateContentAndReload(id) {
+    const editorNode = document.getElementById('editor');
+    updateNoteContent(id, editorNode.innerText, token, () => {
+        console.log('Updated note contents with id ' + id);
+        window.location.href = '/edit.html?id=' + id;
+    });
 }
 
 function saveNoteAndRedirect(toUrl) {
