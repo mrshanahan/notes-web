@@ -61,6 +61,8 @@ function saveNote() {
                 console.log('Updated note with id ' + response.id + ': "' + originalNote.title + '" -> "' + newTitle + '"');
                 updateContentAndReload(response.id);
             });
+        } else {
+            updateContentAndReload(originalNote.id);
         }
     } else {
         createNote({ title: titleNode.value }, token, (response) => {
@@ -81,6 +83,14 @@ function updateContentAndReload(id) {
 function saveNoteAndRedirect(toUrl) {
     saveNote();
     window.location.href = toUrl;
+}
+
+function processEditorKeyDown(args) {
+    if (args.key === 'Enter' && args.ctrlKey === true && args.shiftKey === true) {
+        saveNoteAndRedirect('/');
+    } else if (args.key === 'Enter' && args.ctrlKey === true) {
+        saveNote();
+    }
 }
 
 window.onload = () => {
