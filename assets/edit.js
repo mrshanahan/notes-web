@@ -75,6 +75,11 @@ function saveNote() {
     }
 }
 
+function saveNoteAndRedirect(toUrl) {
+    saveNote();
+    window.location.href = toUrl;
+}
+
 window.onload = () => {
     loadNoteContent();
 }

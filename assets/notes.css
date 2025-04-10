@@ -84,7 +84,7 @@
     font-size: x-large;
 }
 
-#save-title {
+.save-button {
     padding: 0.3em;
     font-size: large;
     padding-top: 0.6em;
