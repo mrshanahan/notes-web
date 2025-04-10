@@ -35,13 +35,28 @@ function createNoteElement(note) {
     noteNode.setAttribute('onclick', "location.href = '/edit.html?id=" + note.id + "';");
     noteNode.setAttribute('id', 'note-' + note.id);
     noteNode.setAttribute('tabindex', '0');
+    const noteNodeMetadataContainer = document.createElement('div');
+    noteNodeMetadataContainer.className = 'note-metadata';
+    const noteNodeTimestampContainer = document.createElement('div')
+    noteNodeTimestampContainer.className = 'note-timestamp-container';
+    const noteNodeCreatedTime = document.createElement('div');
+    noteNodeCreatedTime.className = 'note-timestamp';
+    noteNodeCreatedTime.innerHTML = '<b>Created:</b> ' + note.created_on;
+    const noteNodeUpdatedTime = document.createElement('div');
+    noteNodeUpdatedTime.className = 'note-timestamp';
+    noteNodeUpdatedTime.innerHTML = '<b>Updated:</b> ' + note.updated_on;
     const noteNodeTitle = document.createElement('div');
     noteNodeTitle.className = 'note-title';
     noteNodeTitle.innerText = note.title;
     const noteNodePreview = document.createElement('div');
     noteNodePreview.className = 'note-preview';
     noteNodePreview.innerHTML = genericTextToHtmlText(note.content_preview);
-    noteNode.appendChild(noteNodeTitle);
+
+    noteNodeTimestampContainer.appendChild(noteNodeCreatedTime);
+    noteNodeTimestampContainer.appendChild(noteNodeUpdatedTime);
+    noteNodeMetadataContainer.appendChild(noteNodeTitle);
+    noteNodeMetadataContainer.appendChild(noteNodeTimestampContainer);
+    noteNode.appendChild(noteNodeMetadataContainer);
     noteNode.appendChild(noteNodePreview);
     return noteNode;
 }
