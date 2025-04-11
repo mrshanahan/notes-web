@@ -1,6 +1,34 @@
 // depends on notes.js
 
 var notesList;
+var sortDirection = 1;
+var sortCriteria = {
+    'updated-on': {
+        title: 'Last updated',
+        compare: compareByUpdatedOn
+    },
+    'created-on': {
+        title: 'Most recently created',
+        compare: compareByCreatedOn
+    },
+    'title': {
+        title: 'Title',
+        compare: compareByTitle
+    }
+};
+var currentSortCriterion = 'updated-on';
+
+function compareByUpdatedOn(x, y) {
+    return sortDirection * (Date.parse(x.updated_on) - Date.parse(y.updated_on));
+}
+
+function compareByCreatedOn(x, y) {
+    return sortDirection * (Date.parse(x.created_on) - Date.parse(y.created_on));
+}
+
+function compareByTitle(x, y) {
+    return sortDirection * x.title.localeCompare(y.title, 'en');
+}
 
 function loadNotes() {
     const token = validateAuthToken();
@@ -17,6 +45,7 @@ function loadNotes() {
 function renderNotes() {
     const filter = document.getElementById('notes-list-filter').value;
     const notes = notesList.filter(n => n.title.toLowerCase().indexOf(filter) >= 0);
+    notes.sort(sortCriteria[currentSortCriterion].compare);
     const notesListElement = document.getElementById('notes-list');
 
     // Not necessarily the fastest method to remove all children but good enough for us.
@@ -61,4 +90,46 @@ function createNoteElement(note) {
     return noteNode;
 }
 
-window.onload = loadNotes;
+function toggleSortDirection(button) {
+    sortDirection *= -1;
+    updateSortButton(button);
+    renderNotes();
+}
+
+function updateSortButton(button) {
+    if (sortDirection > 0) {
+        button.innerText = '↑';
+        button.className = button.className.replace(/sort-button-[^\s]*/, 'sort-button-up');
+    } else {
+        button.innerText = '↓';
+        button.className = button.className.replace(/sort-button-[^\s]*/, 'sort-button-down');
+    }
+}
+
+function setSortCriterion(criterion) {
+    const isValidCriterion = sortCriteria.hasOwnProperty(criterion);
+    if (isValidCriterion && currentSortCriterion !== criterion) {
+        currentSortCriterion = criterion;
+        renderNotes();
+    } else if (!isValidCriterion) {
+        console.log('error: no such sort criteion: ' + criterion);
+    }
+}
+
+function load() {
+    loadNotes();
+
+    const sortDirectionButton = document.getElementById('sort-direction-button');
+    updateSortButton(sortDirectionButton);
+
+    const sortCriterionSelect = document.getElementById('sort-criterion-select');
+    for (const [k, v] of Object.entries(sortCriteria)) {
+        const option = document.createElement('option');
+        option.value = k;
+        option.innerText = v.title;
+        sortCriterionSelect.appendChild(option);
+    }
+    setSortCriterion(currentSortCriterion);
+}
+
+window.onload = load;

@@ -18,6 +18,10 @@
                     <div id="notes-list-filter-container">
                         <input id="notes-list-filter" placeholder="Filter by title..." oninput="renderNotes();" />
                     </div>
+                    <select id="sort-criterion-select" onchange="setSortCriterion(event.target.value);"></select>
+                    <div class="notes-button-container">
+                        <button id="sort-direction-button" class="notes-button sort-button-up" onclick="toggleSortDirection(this);">&uarr;</button>
+                    </div>
                 </div>
                 <div id="notes-list"></div>
             </div>
