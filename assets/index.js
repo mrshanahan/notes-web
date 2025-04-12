@@ -24,7 +24,8 @@ function compareByUpdatedOn(x, y) {
 }
 
 function compareByCreatedOn(x, y) {
-    return sortDirection * (Date.parse(x.created_on) - Date.parse(y.created_on));
+    // NB: Reversed here to sort by latest by default
+    return sortDirection * (Date.parse(y.created_on) - Date.parse(x.created_on));
 }
 
 function compareByTitle(x, y) {
