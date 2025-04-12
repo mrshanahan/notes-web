@@ -19,7 +19,8 @@ var sortCriteria = {
 var currentSortCriterion = 'updated-on';
 
 function compareByUpdatedOn(x, y) {
-    return sortDirection * (Date.parse(x.updated_on) - Date.parse(y.updated_on));
+    // NB: Reversed here to sort by latest by default
+    return sortDirection * (Date.parse(y.updated_on) - Date.parse(x.updated_on));
 }
 
 function compareByCreatedOn(x, y) {
