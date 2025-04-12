@@ -52,44 +52,45 @@ function checkTitleChange() {
 
 // TODO: Disable save on empty note. Causes 400 on API side.
 
-function saveNote() {
+function saveNoteThenRedirect(postSaveURL) {
     const titleNode = document.getElementById('note-title');
     const newTitle = titleNode.value.trimEnd();
     if (originalNote !== null) {
+        if (postSaveURL == null) {
+            postSaveURL = '/edit.html?id=' + originalNote.id;
+        }
         if (originalNote.title !== newTitle) {
             updateNote(originalNote.id, { title: newTitle }, token, (response) => {
                 console.log('Updated note with id ' + response.id + ': "' + originalNote.title + '" -> "' + newTitle + '"');
-                updateContentAndReload(response.id);
+                updateContentAndRedirect(response.id, postSaveURL);
             });
         } else {
-            updateContentAndReload(originalNote.id);
+            updateContentAndRedirect(originalNote.id, postSaveURL);
         }
     } else {
         createNote({ title: titleNode.value }, token, (response) => {
             console.log('Note created with id ' + response.id);
-            updateContentAndReload(response.id);
+            if (postSaveURL == null) {
+                postSaveURL = '/edit.html?id=' + response.id;
+            }
+            updateContentAndRedirect(response.id, postSaveURL);
         });
     }
 }
 
-function updateContentAndReload(id) {
+function updateContentAndRedirect(id, postSaveURL) {
     const editorNode = document.getElementById('editor');
     updateNoteContent(id, editorNode.innerText, token, () => {
         console.log('Updated note contents with id ' + id);
-        window.location.href = '/edit.html?id=' + id;
+        window.location.href = postSaveURL;
     });
-}
-
-function saveNoteAndRedirect(toUrl) {
-    saveNote();
-    window.location.href = toUrl;
 }
 
 function processEditorKeyDown(args) {
     if (args.key === 'Enter' && args.ctrlKey === true && args.shiftKey === true) {
-        saveNoteAndRedirect('/');
+        saveNoteThenRedirect('/');
     } else if (args.key === 'Enter' && args.ctrlKey === true) {
-        saveNote();
+        saveNoteThenRedirect();
     }
 }
 
