@@ -14,13 +14,15 @@
             <div class="buffer"></div>
             <div id="notes-list-container">
                 <div id="create-note-bar">
-                    <a href="/edit.html"><img src="./create-note.png"/></a>
                     <div id="notes-list-filter-container">
+                        <a id="notes-create-button" href="/edit.html"><img src="./create-note.png"/></a>
                         <input id="notes-list-filter" placeholder="Filter by title..." oninput="renderNotes();" />
                     </div>
-                    <select id="sort-criterion-select" onchange="setSortCriterion(event.target.value);"></select>
-                    <div class="notes-button-container">
-                        <button id="sort-direction-button" class="notes-button sort-button-up" onclick="toggleSortDirection(this);">&uarr;</button>
+                    <div id="notes-list-sort-container">
+                        <select id="sort-criterion-select" onchange="setSortCriterion(event.target.value);"></select>
+                        <div class="notes-button-container">
+                            <button id="sort-direction-button" class="notes-button sort-button-up" onclick="toggleSortDirection(this);">&uarr;</button>
+                        </div>
                     </div>
                 </div>
                 <div id="notes-list"></div>
