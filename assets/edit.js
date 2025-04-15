@@ -17,6 +17,8 @@ function setEditProperties(note) {
 function setCreateProperties() {
     const pageTitle = document.getElementsByTagName('title')[0];
     pageTitle.innerText = 'Create note';
+    const deleteButton = document.getElementById('delete');
+    deleteButton.parentNode.removeChild(deleteButton);
 }
 
 function loadNoteContent() {
@@ -84,6 +86,22 @@ function updateContentAndRedirect(id, postSaveURL) {
         console.log('Updated note contents with id ' + id);
         window.location.href = postSaveURL;
     });
+}
+
+function deleteNoteAndRedirect(postSaveURL) {
+    if (originalNote === null) {
+        return;
+    }
+
+    const token = validateAuthToken();
+    if (!token) {
+        return;
+    }
+    if (confirm('Delete note?')) {
+        deleteNote(originalNote.id, token, _ => {
+            window.location.href = postSaveURL;
+        });
+    }
 }
 
 function processEditorKeyDown(args) {
