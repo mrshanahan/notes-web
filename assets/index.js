@@ -63,12 +63,12 @@ function renderNotes() {
 function createNoteElement(note) {
     const noteNode = document.createElement('div');
     noteNode.className = 'note';
-    noteNode.setAttribute('onclick', "location.href = '/edit.html?id=" + note.id + "';");
+    noteNode.setAttribute('onclick', "noteClick(" + note.id + ", this, event);");
     noteNode.setAttribute('id', 'note-' + note.id);
     noteNode.setAttribute('tabindex', '0');
     const noteNodeMetadataContainer = document.createElement('div');
     noteNodeMetadataContainer.className = 'note-metadata';
-    const noteNodeTimestampContainer = document.createElement('div')
+    const noteNodeTimestampContainer = document.createElement('div');
     noteNodeTimestampContainer.className = 'note-timestamp-container';
     const noteNodeCreatedTime = document.createElement('div');
     noteNodeCreatedTime.className = 'note-timestamp';
@@ -76,6 +76,13 @@ function createNoteElement(note) {
     const noteNodeUpdatedTime = document.createElement('div');
     noteNodeUpdatedTime.className = 'note-timestamp';
     noteNodeUpdatedTime.innerHTML = '<b>Updated:</b> ' + note.updated_on;
+    const noteNodeDeleteButtonContainer = document.createElement('div');
+    noteNodeDeleteButtonContainer.className = 'note-delete-button-container';
+    const noteNodeDeleteButton = document.createElement('button');
+    noteNodeDeleteButton.setAttribute('onclick', "deleteButtonClick(" + note.id + ", this, event);");
+    noteNodeDeleteButton.id = 'delete-note-' + note.id;
+    noteNodeDeleteButton.className = 'note-delete-button';
+    noteNodeDeleteButton.innerText = 'X';
     const noteNodeTitle = document.createElement('div');
     noteNodeTitle.className = 'note-title';
     noteNodeTitle.innerText = note.title;
@@ -83,10 +90,12 @@ function createNoteElement(note) {
     noteNodePreview.className = 'note-preview';
     noteNodePreview.innerHTML = genericTextToHtmlText(note.content_preview);
 
+    noteNodeDeleteButtonContainer.appendChild(noteNodeDeleteButton);
     noteNodeTimestampContainer.appendChild(noteNodeCreatedTime);
     noteNodeTimestampContainer.appendChild(noteNodeUpdatedTime);
     noteNodeMetadataContainer.appendChild(noteNodeTitle);
     noteNodeMetadataContainer.appendChild(noteNodeTimestampContainer);
+    noteNodeMetadataContainer.appendChild(noteNodeDeleteButtonContainer);
     noteNode.appendChild(noteNodeMetadataContainer);
     noteNode.appendChild(noteNodePreview);
     return noteNode;
@@ -115,6 +124,30 @@ function setSortCriterion(criterion) {
         renderNotes();
     } else if (!isValidCriterion) {
         console.log('error: no such sort criteion: ' + criterion);
+    }
+}
+
+function noteClick(id, element, event) {
+    if (event.target.id != element.id) {
+        return;
+    }
+
+    location.href = '/edit.html?id=' + id;
+}
+
+function deleteButtonClick(id, element, event) {
+    if (event.target.id != element.id) {
+        return;
+    }
+
+    const token = validateAuthToken();
+    if (!token) {
+        return;
+    }
+    if (confirm('Delete note?')) {
+        deleteNote(id, token, _ => {
+            loadNotes();
+        });
     }
 }
 

@@ -85,6 +85,16 @@
     flex-direction: column;
 }
 
+.note-delete-button-container {
+    margin-left: 0.5em;
+}
+
+.note-delete-button {
+    font-weight: bold;
+    background-color: lightcoral;
+    color: black;
+}
+
 .note-timestamp {
     color: dimgray;
     font-size: x-small;

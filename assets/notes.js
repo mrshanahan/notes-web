@@ -81,6 +81,10 @@ function createNote(note, token, callback) {
     genericSendWithPayload('POST', API_URL + '/', jsonNote, token, callback, 'application/json', JSON.parse);
 }
 
+function deleteNote(id, token, callback) {
+    genericSend('DELETE', API_URL + '/' + id, token, callback);
+}
+
 function genericSend(method, url, token, callback, responseTransform) {
     const xhr = new XMLHttpRequest();
     xhr.open(method, url);
