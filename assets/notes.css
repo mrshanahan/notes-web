@@ -150,6 +150,11 @@
     padding-top: 0.6em;
 }
 
+.delete-button > button {
+    background-color: lightcoral;
+    color: white;
+}
+
 #note-title.note-title-edited {
     background-color: yellow;
 }
