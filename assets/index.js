@@ -72,10 +72,10 @@ function createNoteElement(note) {
     noteNodeTimestampContainer.className = 'note-timestamp-container';
     const noteNodeCreatedTime = document.createElement('div');
     noteNodeCreatedTime.className = 'note-timestamp';
-    noteNodeCreatedTime.innerHTML = '<b>Created:</b> ' + note.created_on;
+    noteNodeCreatedTime.innerHTML = '<b>Created:</b> ' + new Date(note.created_on).toLocaleString();
     const noteNodeUpdatedTime = document.createElement('div');
     noteNodeUpdatedTime.className = 'note-timestamp';
-    noteNodeUpdatedTime.innerHTML = '<b>Updated:</b> ' + note.updated_on;
+    noteNodeUpdatedTime.innerHTML = '<b>Updated:</b> ' + new Date(note.updated_on).toLocaleString();
     const noteNodeDeleteButtonContainer = document.createElement('div');
     noteNodeDeleteButtonContainer.className = 'note-delete-button-container';
     const noteNodeDeleteButton = document.createElement('button');
