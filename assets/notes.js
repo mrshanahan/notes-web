@@ -37,14 +37,14 @@ function validateAuthToken() {
 }
 
 function genericTextToHtmlText(text) {
-    var lines = text.split('\n');
+    var lines = text.split(/\r?\n/);
     for (var i = 0; i < lines.length; i++) {
         var line = lines[i];
         while (line.match(/^\s+/)) {
             line = line.replace(/^(\s*)\s/, '$1&nbsp;');
         }
         while (line.match(/\s\s+/)) {
-            line = line.replace(/(\s+)\s/, '$1&nbsp;');
+            line = line.replace(/(\s*)\s/, '$1&nbsp;');
         }
         lines[i] = line;
     }

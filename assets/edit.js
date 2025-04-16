@@ -17,6 +17,7 @@ function setEditProperties(note) {
 function setCreateProperties() {
     const pageTitle = document.getElementsByTagName('title')[0];
     pageTitle.innerText = 'Create note';
+
     const deleteButton = document.getElementById('delete');
     deleteButton.parentNode.removeChild(deleteButton);
 }
