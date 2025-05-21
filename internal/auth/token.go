@@ -12,8 +12,10 @@ import (
 )
 
 var (
-	TokenCookieName string = "access_token"
-	TokenLocalName  string = "token"
+	AccessTokenCookieName  string = "access_token"
+	AccessTokenLocalName   string = "access_token"
+	RefreshTokenCookieName string = "refresh_token"
+	RefreshTokenLocalName  string = "refresh_token"
 )
 
 func VerifyToken(ctx context.Context, tokenString string) (*jwt.Token, error) {
