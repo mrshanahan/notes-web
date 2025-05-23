@@ -97,6 +97,10 @@ function genericSend(method, url, token, callback, responseTransform) {
             }
             console.log('Data received:', response);
             callback(response);
+        } else if (xhr.status == 401) {
+            console.error('Unauthenticated; redirecting');
+            const origin = window.location.href;
+            window.location.href = "/auth/login?origin_url=" + encodeURI(origin);
         } else {
             console.error('Request failed with status:', xhr.status);
         }
@@ -122,6 +126,10 @@ function genericSendWithPayload(method, url, payload, token, callback, contentTy
             }
             console.log('Data received:', response);
             callback(response);
+        } else if (xhr.status == 401) {
+            console.error('Unauthenticated; redirecting');
+            const origin = window.location.href;
+            window.location.href = "/auth/login?origin_url=" + encodeURI(origin);
         } else {
             console.error('Request failed with status:', xhr.status);
         }
