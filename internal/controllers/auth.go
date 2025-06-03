@@ -125,7 +125,7 @@ func CallbackController(c *fiber.Ctx) error {
 	})
 
 	redirectUrl := c.Cookies(OriginUrlCookieName)
-	if redirectUrl != "" {
+	if redirectUrl == "" {
 		redirectUrl = "/"
 	}
 	deleteCookie(c, OriginUrlCookieName)
