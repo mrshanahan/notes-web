@@ -36,10 +36,14 @@ function validateAuthToken() {
     return token
 }
 
+// TODO: This needs to be replaced by something that actually understands
+//       HTML/markdown
 function genericTextToHtmlText(text) {
     var lines = text.split(/\r?\n/);
     for (var i = 0; i < lines.length; i++) {
         var line = lines[i];
+        line = line.replace('<', '&lt;');
+        line = line.replace('>', '&gt;');
         while (line.match(/^\s+/)) {
             line = line.replace(/^(\s*)\s/, '$1&nbsp;');
         }
