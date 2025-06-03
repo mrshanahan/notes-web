@@ -53,39 +53,39 @@ function genericTextToHtmlText(text) {
 
 // API service interactions
 
-function getNotes(token, callback) {
-    genericSend('GET', API_URL + '?includePreview=true', token, callback, JSON.parse);
+function getNotes(token, callback, preReauthCallback) {
+    genericSend('GET', API_URL + '?includePreview=true', token, callback, preReauthCallback, JSON.parse);
 }
 
-function getNote(id, token, callback) {
-    genericSend('GET', API_URL + '/' + id, token, callback, JSON.parse);
+function getNote(id, token, callback, preReauthCallback) {
+    genericSend('GET', API_URL + '/' + id, token, callback, preReauthCallback, JSON.parse);
 }
 
-function getNoteContent(id, token, callback) {
-    genericSend('GET', API_URL + '/' + id + '/content', token, callback);
+function getNoteContent(id, token, callback, preReauthCallback) {
+    genericSend('GET', API_URL + '/' + id + '/content', token, callback, preReauthCallback);
 }
 
-function updateNote(id, note, token, callback) {
+function updateNote(id, note, token, callback, preReauthCallback) {
     const jsonNote = JSON.stringify(note);
-    genericSendWithPayload('POST', API_URL + '/' + id, jsonNote, token, callback, 'application/json', JSON.parse);
+    genericSendWithPayload('POST', API_URL + '/' + id, jsonNote, token, callback, preReauthCallback, 'application/json', JSON.parse);
 }
 
-function updateNoteContent(id, content, token, callback) {
+function updateNoteContent(id, content, token, callback, preReauthCallback) {
     const formData = new FormData();
     formData.append('content', content);
-    genericSendWithPayload('POST', API_URL + '/' + id + '/content', formData, token, callback);
+    genericSendWithPayload('POST', API_URL + '/' + id + '/content', formData, token, callback, preReauthCallback);
 }
 
-function createNote(note, token, callback) {
+function createNote(note, token, callback, preReauthCallback) {
     const jsonNote = JSON.stringify(note);
-    genericSendWithPayload('POST', API_URL + '/', jsonNote, token, callback, 'application/json', JSON.parse);
+    genericSendWithPayload('POST', API_URL + '/', jsonNote, token, callback, preReauthCallback, 'application/json', JSON.parse);
 }
 
-function deleteNote(id, token, callback) {
-    genericSend('DELETE', API_URL + '/' + id, token, callback);
+function deleteNote(id, token, callback, preReauthCallback) {
+    genericSend('DELETE', API_URL + '/' + id, token, callback, preReauthCallback);
 }
 
-function genericSend(method, url, token, callback, responseTransform) {
+function genericSend(method, url, token, callback, preReauthCallback, responseTransform) {
     const xhr = new XMLHttpRequest();
     xhr.open(method, url);
     xhr.setRequestHeader('Authorization', 'Bearer ' + token);
@@ -99,6 +99,9 @@ function genericSend(method, url, token, callback, responseTransform) {
             callback(response);
         } else if (xhr.status == 401) {
             console.error('Unauthenticated; redirecting');
+            if (preReauthCallback) {
+                preReauthCallback();
+            }
             const origin = window.location.href;
             window.location.href = "/auth/login?origin_url=" + encodeURI(origin);
         } else {
@@ -111,7 +114,7 @@ function genericSend(method, url, token, callback, responseTransform) {
     xhr.send();
 }
 
-function genericSendWithPayload(method, url, payload, token, callback, contentType = null, responseTransform) {
+function genericSendWithPayload(method, url, payload, token, callback, preReauthCallback, contentType = null, responseTransform) {
     const xhr = new XMLHttpRequest();
     xhr.open(method, url);
     xhr.setRequestHeader('Authorization', 'Bearer ' + token);
@@ -128,6 +131,9 @@ function genericSendWithPayload(method, url, payload, token, callback, contentTy
             callback(response);
         } else if (xhr.status == 401) {
             console.error('Unauthenticated; redirecting');
+            if (preReauthCallback) {
+                preReauthCallback();
+            }
             const origin = window.location.href;
             window.location.href = "/auth/login?origin_url=" + encodeURI(origin);
         } else {

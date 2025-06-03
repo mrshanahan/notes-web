@@ -4,14 +4,49 @@ var originalNote = null;
 
 var token;
 
-function setEditProperties(note) {
+var editInProgress = false;
+
+function setEditPropertiesFromNote(note) {
+    setEditProperties(note, note.title);
+}
+
+function setEditPropertiesFromEdit(note, noteLastUpdated, editTitle) {
+    const title = noteLastUpdated === note.updated_on && editTitle !== note.title
+        ? editTitle
+        : note.title;
+    setEditProperties(note, title);
+}
+
+function setEditProperties(note, title) {
     const noteTitle = document.getElementById('note-title');
-    noteTitle.value = note.title;
+    noteTitle.value = title;
 
     const pageTitle = document.getElementsByTagName('title')[0];
-    pageTitle.innerText = 'Edit: ' + note.title;
+    pageTitle.innerText = 'Edit: ' + title;
 
     originalNote = note;
+}
+
+function setEditorContent(content) {
+    const editor = document.getElementById('editor');
+    editor.innerHTML = genericTextToHtmlText(content);
+}
+
+function saveEditorContent() {
+    if (editInProgress) {
+        const titleNode = document.getElementById('note-title');
+        const newTitle = titleNode.value.trimEnd();
+        const editorNode = document.getElementById('editor');
+
+        const editDataTs = originalNote.updated_on;
+        const editDataTitle = newTitle;
+        const editData = editorNode.innerText;
+
+        sessionStorage.setItem("editInProgress", "true");
+        sessionStorage.setItem("editDataTs", editDataTs);
+        sessionStorage.setItem("editDataTitle", editDataTitle);
+        sessionStorage.setItem("editData", editData);
+    }
 }
 
 function setCreateProperties() {
@@ -34,12 +69,32 @@ function loadNoteContent() {
         return;
     }
 
-    getNote(id, token, setEditProperties);
+    const editInProgress = sessionStorage.getItem("editInProgress");
+    if (editInProgress) {
+        const editDataTs = sessionStorage.getItem("editDataTs");
+        const editDataTitle = sessionStorage.getItem("editDataTitle");
 
-    getNoteContent(id, token, function (response) {
-        const editor = document.getElementById('editor');
-        editor.innerHTML = genericTextToHtmlText(response);
-    })
+        getNote(id, token, function (note) {
+            setEditPropertiesFromEdit(note, editDataTs, editDataTitle);
+
+            // This happens inside the getNote callback here so that we
+            // can check the updated timestamp before setting the content
+            if (editDataTs === note.updated_on) {
+                const editData = sessionStorage.getItem("editData");
+                setEditorContent(editData);
+                sessionStorage.clear();
+            } else {
+                getNoteContent(id, token, function (response) {
+                    setEditorContent(response);
+                    sessionStorage.clear();
+                });
+            }
+        });
+    } else {
+        getNote(id, token, setEditPropertiesFromNote);
+
+        getNoteContent(id, token, setEditorContent);
+    }
 }
 
 function checkTitleChange() {
@@ -56,6 +111,7 @@ function checkTitleChange() {
 // TODO: Disable save on empty note. Causes 400 on API side.
 
 function saveNoteThenRedirect(postSaveURL) {
+    token = getCookie('access_token'); // TODO: Remove me!
     const titleNode = document.getElementById('note-title');
     const newTitle = titleNode.value.trimEnd();
     if (originalNote !== null) {
@@ -66,7 +122,7 @@ function saveNoteThenRedirect(postSaveURL) {
             updateNote(originalNote.id, { title: newTitle }, token, (response) => {
                 console.log('Updated note with id ' + response.id + ': "' + originalNote.title + '" -> "' + newTitle + '"');
                 updateContentAndRedirect(response.id, postSaveURL);
-            });
+            }, saveEditorContent);
         } else {
             updateContentAndRedirect(originalNote.id, postSaveURL);
         }
@@ -77,7 +133,7 @@ function saveNoteThenRedirect(postSaveURL) {
                 postSaveURL = '/edit.html?id=' + response.id;
             }
             updateContentAndRedirect(response.id, postSaveURL);
-        });
+        }, saveEditorContent);
     }
 }
 
@@ -86,7 +142,7 @@ function updateContentAndRedirect(id, postSaveURL) {
     updateNoteContent(id, editorNode.innerText, token, () => {
         console.log('Updated note contents with id ' + id);
         window.location.href = postSaveURL;
-    });
+    }, saveEditorContent);
 }
 
 function deleteNoteAndRedirect(postSaveURL) {
@@ -101,7 +157,7 @@ function deleteNoteAndRedirect(postSaveURL) {
     if (confirm('Delete note?')) {
         deleteNote(originalNote.id, token, _ => {
             window.location.href = postSaveURL;
-        });
+        }, saveEditorContent);
     }
 }
 
@@ -111,6 +167,7 @@ function processEditorKeyDown(args) {
     } else if (args.key === 'Enter' && args.ctrlKey === true) {
         saveNoteThenRedirect();
     }
+    editInProgress = true;
 }
 
 window.onload = () => {
