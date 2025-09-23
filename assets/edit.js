@@ -141,7 +141,13 @@ function updateContentAndRedirect(id, postSaveURL) {
     const editorNode = document.getElementById('editor');
     updateNoteContent(id, editorNode.innerText, token, () => {
         console.log('Updated note contents with id ' + id);
-        window.location.href = postSaveURL;
+
+        // If we redirect before existing this callback for some reason the request
+        // doesn't "complete" according to the browser (sometimes, at least in Firefox).
+        // It appeared to affect whether or not the note actually saved but I couldn't
+        // repro that locally, only saw the "incomplete" request locally. A short timeout
+        // before redirect appears to fix that but is frustratingly hacky.
+        setTimeout(() => window.location.href = postSaveURL, 100);
     }, saveEditorContent);
 }
 
