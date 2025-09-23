@@ -110,6 +110,7 @@ func Run() int {
 		// TODO: Do we actually need this if we're only serving static files?
 		// notes.Use(middleware.ValidateAccessToken(webauth.TokenLocalName, webauth.TokenCookieName))
 		notes.Route("/auth", func(authR fiber.Router) {
+			authR.Use(controllers.InjectDisableAuth(disableAuth))
 			authR.Get("/login", controllers.LoginController)
 			authR.Get("/logout", controllers.LogoutController)
 			authR.Get("/callback", controllers.CallbackController)

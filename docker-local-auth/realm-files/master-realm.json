@@ -542,29 +542,6 @@
   "webAuthnPolicyPasswordlessAvoidSameAuthenticatorRegister" : false,
   "webAuthnPolicyPasswordlessAcceptableAaguids" : [ ],
   "webAuthnPolicyPasswordlessExtraOrigins" : [ ],
-  "users" : [ {
-    "id" : "5d1d8ba0-8630-4eb1-8a1a-a55d343f88af",
-    "username" : "admin",
-    "emailVerified" : false,
-    "createdTimestamp" : 1742487242171,
-    "enabled" : true,
-    "totp" : false,
-    "credentials" : [ {
-      "id" : "730a4098-0187-4d10-82ec-98dd1f0af1d6",
-      "type" : "password",
-      "createdDate" : 1742487242641,
-      "secretData" : "{\"value\":\"KEpQNwBZ6XhWhi++VRZ5JGvQHhDzb/8dGKeJ0ze1SBRVhDAk9IrIHxQKmdQNOYFVGrOObNfWH0v6/rtj6pZzHg==\",\"salt\":\"E9S3A3ent7R36jheZicmzw==\",\"additionalParameters\":{}}",
-      "credentialData" : "{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}"
-    } ],
-    "disableableCredentialTypes" : [ ],
-    "requiredActions" : [ ],
-    "realmRoles" : [ "default-roles-master", "admin" ],
-    "clientRoles" : {
-      "notes-realm" : [ "view-clients", "manage-realm", "create-client", "manage-authorization", "view-events", "view-realm", "manage-clients", "query-clients", "manage-identity-providers", "query-realms", "manage-events", "manage-users", "query-groups", "query-users", "view-authorization", "view-identity-providers", "view-users" ]
-    },
-    "notBefore" : 0,
-    "groups" : [ ]
-  } ],
   "scopeMappings" : [ {
     "clientScope" : "offline_access",
     "roles" : [ "offline_access" ]
