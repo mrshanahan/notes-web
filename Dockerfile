@@ -1,4 +1,4 @@
-FROM golang:latest as builder
+FROM golang:latest AS builder
 
 RUN mkdir -p /app
 COPY . /app/notes-web
@@ -9,6 +9,7 @@ RUN go build ./cmd/notes-web.go
 # to run the exe. The same would be true when running the container directly & invoking it, despite the fact that
 # the file was discoverable by ls. Not sure why but that doesn't happen on ubuntu.
 FROM ubuntu:latest
+ARG GIT_SHA
 
 # Need to install ca-certificates explicitly to get the LetsEncrypt root cert
 RUN apt update
@@ -17,7 +18,9 @@ RUN mkdir -p /app
 COPY --from=builder /app/notes-web/notes-web /app/notes-web
 COPY --from=builder /app/notes-web/assets /app/assets
 
-ENV NOTES_WEB_PORT 4444
-ENV NOTES_WEB_STATIC_FILES_DIR /app/assets
+ENV NOTES_WEB_PORT=4444
+ENV NOTES_WEB_STATIC_FILES_DIR=/app/assets
+
+LABEL dev.quemot.notes.image.sha=$GIT_SHA
 
 ENTRYPOINT [ "/app/notes-web" ]
