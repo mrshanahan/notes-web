@@ -38,7 +38,7 @@ function saveEditorContent() {
         const newTitle = titleNode.value.trimEnd();
         const editorNode = document.getElementById('editor');
 
-        const editDataTs = originalNote.updated_on;
+        const editDataTs = originalNote?.updated_on ?? '';
         const editDataTitle = newTitle;
         const editData = editorNode.innerText;
 
