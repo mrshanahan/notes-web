@@ -33,6 +33,26 @@ func main() {
 }
 
 func Run() int {
+	logLevel := os.Getenv("NOTES_WEB_LOG_LEVEL")
+	if logLevel != "" {
+		logLevelUpper := strings.ToUpper(logLevel)
+		switch logLevelUpper {
+		case "DEBUG", "D":
+			slog.SetLogLoggerLevel(slog.LevelDebug)
+		case "INFO", "I":
+			slog.SetLogLoggerLevel(slog.LevelInfo)
+		case "WARN", "WARNING", "W":
+			slog.SetLogLoggerLevel(slog.LevelWarn)
+		case "ERROR", "E":
+			slog.SetLogLoggerLevel(slog.LevelError)
+		default:
+			slog.SetLogLoggerLevel(slog.LevelInfo)
+			slog.Warn("unrecognized value for NOTES_WEB_LOG_LEVEL; defaulting to Info", "value", logLevel)
+		}
+	} else {
+		slog.SetLogLoggerLevel(slog.LevelInfo)
+	}
+
 	staticFilesDir := os.Getenv("NOTES_WEB_STATIC_FILES_DIR")
 	if staticFilesDir == "" {
 		staticFilesDir = DefaultStaticFilesDir
