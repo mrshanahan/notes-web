@@ -72,6 +72,8 @@ func LoginController(c *fiber.Ctx) error {
 				return err
 			}
 
+			slog.Info("successfully got new access token & refresh token")
+
 			c.Cookie(&fiber.Cookie{
 				Name:  webauth.AccessTokenCookieName,
 				Value: token.AccessToken,
@@ -82,6 +84,8 @@ func LoginController(c *fiber.Ctx) error {
 			})
 		}
 	} else {
+		slog.Warn("auth is disabled; setting cookie & ignoring")
+
 		c.Cookie(&fiber.Cookie{
 			Name:  webauth.AccessTokenCookieName,
 			Value: "AUTH_DISABLED",
