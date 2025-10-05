@@ -29,6 +29,7 @@ func InjectDisableAuth(disableAuth bool) func(c *fiber.Ctx) error {
 }
 
 func LoginController(c *fiber.Ctx) error {
+	slog.Info("entering login controller")
 	originUrl := c.Query(OriginUrlCookieName)
 	if originUrl == "" {
 		originUrl = "/" // TODO: Constant/pass this in/truncate URL path
