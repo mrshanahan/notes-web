@@ -29,7 +29,6 @@ func InjectDisableAuth(disableAuth bool) func(c *fiber.Ctx) error {
 }
 
 func LoginController(c *fiber.Ctx) error {
-	slog.Info("entering login controller")
 	originUrl := c.Query(OriginUrlCookieName)
 	if originUrl == "" {
 		originUrl = "/" // TODO: Constant/pass this in/truncate URL path
@@ -82,8 +81,6 @@ func LoginController(c *fiber.Ctx) error {
 			slog.Error("failed to parse refresh token response", "err", err)
 			return err
 		}
-
-		slog.Info("successfully got new access token & refresh token")
 
 		c.Cookie(&fiber.Cookie{
 			Name:  webauth.AccessTokenCookieName,
