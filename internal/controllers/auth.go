@@ -36,64 +36,66 @@ func LoginController(c *fiber.Ctx) error {
 	}
 
 	disableAuth := c.Locals("disableAuth").(bool)
-	if !disableAuth {
-		refreshTokenStr := c.Cookies("refresh_token")
-		if refreshTokenStr != "" {
-			tokenUrl := webauth.AuthConfig.LoginConfig.Endpoint.TokenURL
-			form := url.Values{
-				"grant_type":    []string{"refresh_token"},
-				"client_id":     []string{webauth.AuthConfig.LoginConfig.ClientID},
-				"refresh_token": []string{refreshTokenStr},
-			}
-			req, err := http.NewRequestWithContext(c.Context(), http.MethodPost, tokenUrl, strings.NewReader(form.Encode()))
-			if err != nil {
-				slog.Error("failed to create refresh token request", "err", err)
-				return err
-			}
-			req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-			resp, err := http.DefaultClient.Do(req)
-			if err != nil {
-				slog.Error("failed to send refresh token request", "err", err)
-				return err
-			}
-			// resp, err := http.PostForm(tokenUrl, form)
-			respBytes, err := io.ReadAll(resp.Body)
-			if err != nil {
-				slog.Error("failed to read refresh token response", "err", err)
-				return err
-			}
-
-			if resp.StatusCode != 200 {
-				deleteCookie(c, webauth.RefreshTokenCookieName)
-				goto login
-			}
-			token := &oauth2.Token{}
-			if err = json.Unmarshal(respBytes, token); err != nil {
-				slog.Error("failed to parse refresh token response", "err", err)
-				return err
-			}
-
-			slog.Info("successfully got new access token & refresh token")
-
-			c.Cookie(&fiber.Cookie{
-				Name:  webauth.AccessTokenCookieName,
-				Value: token.AccessToken,
-			})
-			c.Cookie(&fiber.Cookie{
-				Name:  webauth.RefreshTokenCookieName,
-				Value: token.RefreshToken,
-			})
-		}
-	} else {
+	if disableAuth {
 		slog.Warn("auth is disabled; setting cookie & ignoring")
 
 		c.Cookie(&fiber.Cookie{
 			Name:  webauth.AccessTokenCookieName,
 			Value: "AUTH_DISABLED",
 		})
+
+		return c.Redirect(originUrl)
 	}
 
-	return c.Redirect(originUrl)
+	refreshTokenStr := c.Cookies("refresh_token")
+	if refreshTokenStr != "" {
+		tokenUrl := webauth.AuthConfig.LoginConfig.Endpoint.TokenURL
+		form := url.Values{
+			"grant_type":    []string{"refresh_token"},
+			"client_id":     []string{webauth.AuthConfig.LoginConfig.ClientID},
+			"refresh_token": []string{refreshTokenStr},
+		}
+		req, err := http.NewRequestWithContext(c.Context(), http.MethodPost, tokenUrl, strings.NewReader(form.Encode()))
+		if err != nil {
+			slog.Error("failed to create refresh token request", "err", err)
+			return err
+		}
+		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+		resp, err := http.DefaultClient.Do(req)
+		if err != nil {
+			slog.Error("failed to send refresh token request", "err", err)
+			return err
+		}
+		// resp, err := http.PostForm(tokenUrl, form)
+		respBytes, err := io.ReadAll(resp.Body)
+		if err != nil {
+			slog.Error("failed to read refresh token response", "err", err)
+			return err
+		}
+
+		if resp.StatusCode != 200 {
+			deleteCookie(c, webauth.RefreshTokenCookieName)
+			goto login
+		}
+		token := &oauth2.Token{}
+		if err = json.Unmarshal(respBytes, token); err != nil {
+			slog.Error("failed to parse refresh token response", "err", err)
+			return err
+		}
+
+		slog.Info("successfully got new access token & refresh token")
+
+		c.Cookie(&fiber.Cookie{
+			Name:  webauth.AccessTokenCookieName,
+			Value: token.AccessToken,
+		})
+		c.Cookie(&fiber.Cookie{
+			Name:  webauth.RefreshTokenCookieName,
+			Value: token.RefreshToken,
+		})
+
+		return c.Redirect(originUrl)
+	}
 
 login:
 
